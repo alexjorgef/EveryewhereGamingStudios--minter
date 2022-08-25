@@ -21,7 +21,8 @@ import {
   inputDescription,
   inputNumber,
   inputCollectionName,
-  inputSupply
+  inputSupply,
+  inputTokenId
 } from '../../utils/input'
 import { logo } from '../../utils/logos'
 import HooverSpringer from '../../components/HooverSpringer';
@@ -81,7 +82,7 @@ const Minter: React.FC = (): JSX.Element => {
         },
         image: fileToIpfsurl,
       };
-      const fileToUpload = new Moralis.File(`${name}metadata.json`, {
+      const fileToUpload = new Moralis.File(`${collectionName}_${name}_metadata.json`, {
         base64: Buffer.from(JSON.stringify(metadata)).toString('base64'),
       });
       await fileToUpload.saveIPFS();
@@ -150,7 +151,7 @@ const Minter: React.FC = (): JSX.Element => {
           <input
             type={inputNumber}
             className={styles.input}
-            placeholder={inputSupply}
+            placeholder={inputTokenId}
             value={tokenId}
             onChange={(e) => setTokenId(parseInt(e.target.value, 10))}
           />
@@ -162,7 +163,7 @@ const Minter: React.FC = (): JSX.Element => {
           <input
             type={inputNumber}
             className={styles.input}
-            placeholder={inputNumber}
+            placeholder={inputSupply}
             value={qty}
             onChange={(e) => setQty(parseInt(e.target.value, 10))}
           />
