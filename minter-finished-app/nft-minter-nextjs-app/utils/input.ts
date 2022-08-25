@@ -1,0 +1,8 @@
+export const inputText = "text"
+export const inputFiles = "file"
+export const inputSubmit = "submit"
+export const inputName = "Name"
+export const inputDescription = "Description"
+export const inputNumber = "number"
+export const inputCollectionName = "Collection Name"
+export const inputSupply = "Total Supply: 1000"
