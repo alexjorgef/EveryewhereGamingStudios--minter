@@ -1,3 +1,7 @@
+export const AdminContractAddress = "0xFd1f74D6Ca2dE8E74DA87Cc8fe9B360B8e5E80FA";
+export const MasterWalletAddress = "0xBbDF6BD03dc9d204efde0d596Aa7e53175CC945B";
+export const MinterAddress = "0xc3c51d4dD3621af8CB09BB0B3F48Abad8ED15CA8";
+
 export const contractAddress = "0x2402B33fa368d79b19E6A35F7e4A1e67FEB22E04";
 export const contractABI = [
 	{
