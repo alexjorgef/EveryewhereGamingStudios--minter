@@ -60,6 +60,6 @@ it('should deploy', async () => {
     console.log('resultsTrx', resultsTrx);
     
     const check1 = await cm.checkCollection('test collection');
-    await check1.wait();
+    // await check1.wait();
     console.log('check1', check1);
 });

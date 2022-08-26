@@ -6,4 +6,4 @@ export const inputDescription = "Description"
 export const inputNumber = "number"
 export const inputCollectionName = "Collection Name"
 export const inputSupply = "Total Supply: 1000"
-export const inputTokenId = "0";
+export const inputTokenId = "Toek ID";

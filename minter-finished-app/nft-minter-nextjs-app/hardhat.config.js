@@ -10,6 +10,9 @@ require('@openzeppelin/hardhat-upgrades');
     networks: {
       cronos_test: {
         url: "https://evm-t3.cronos.org",
+      },
+      ganache: {
+        url: "HTTP://127.0.0.1:7545",
       }
     },
     solidity: {
@@ -22,8 +25,8 @@ require('@openzeppelin/hardhat-upgrades');
       }
     },
     paths: {
-      sources: "./solidty",
-      tests: "./tests",
+      sources: "./contracts",
+      tests: "./test",
       cache: "./cache",
       artifacts: "./artifacts"
     },

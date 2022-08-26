@@ -9,7 +9,9 @@ import Moralis from 'moralis';
 import Web3 from 'web3';
 import {
   contractABI,
-  contractAddress
+  contractAddress,
+  FactoryAddress,
+  MasterWalletAddress
 } from '../../contract';
 import styles from '../../styles/Minter.module.css';
 import classnames from 'classnames/bind';
@@ -27,11 +29,14 @@ import {
 import { logo } from '../../utils/logos'
 import HooverSpringer from '../../components/HooverSpringer';
 
+import _Everywhere_TowerDefense_Collection_Minter1155_V1 from '../../build/contracts/_Everywhere_TowerDefense_Collection_Minter1155_V1.json';
+import _Everywhere_TowerDefense_Minter1155_V1 from '../../build/contracts/_Everywhere_TowerDefense_Minter1155_V1.json';
+
 // global variables
 const cx = classnames.bind(styles);
 
 // initialize web3 package with Metamask
-const web3 = new Web3(Web3.givenProvider);
+const web3 = new Web3('http://127.0.0.1:7545'); // Web3.givenProvider
 
 // minter function
 const Minter: React.FC = (): JSX.Element => {
@@ -45,7 +50,7 @@ const Minter: React.FC = (): JSX.Element => {
   const router = useRouter();
 
   // variables to set state for the form to submit
-  const [collectionName, setCollectionName] = useState<string>('');
+  const [collectionName, setCollectionName] = useState<string>('test collection');
   const [name, setName] = useState<string>('');
   const [qty, setQty] = useState<number>(100);
   const [tokenId, setTokenId] = useState<number>(0);
@@ -63,6 +68,16 @@ const Minter: React.FC = (): JSX.Element => {
     e.preventDefault();
     try {
 
+      const _Everywhere_TowerDefense_Collection_Minter1155_V1Contract = new web3.eth.Contract(_Everywhere_TowerDefense_Collection_Minter1155_V1.abi as any, FactoryAddress);
+      //const r = await _Everywhere_TowerDefense_Collection_Minter1155_V1Contract.methods.create(collectionName, "tcxxxx").call();
+      let MinterAddress = await _Everywhere_TowerDefense_Collection_Minter1155_V1Contract.methods.checkCollection(collectionName).call();
+
+      if(parseInt(MinterAddress, 16) ===  0) {
+        MinterAddress = await _Everywhere_TowerDefense_Collection_Minter1155_V1Contract.methods.create(collectionName, 'tcxxxx', { from: MasterWalletAddress, gas: 999999}).call();
+      }
+
+      console.log('MinterAddress', MinterAddress);
+      
       // save image to IPFS
       const fileToIpfs = new Moralis.File(
         file.name,
@@ -90,12 +105,12 @@ const Minter: React.FC = (): JSX.Element => {
 
       // interact with smart contract
       const contract = new web3.eth.Contract(
-        contractABI as any, 
-        contractAddress
+        _Everywhere_TowerDefense_Minter1155_V1.abi as any, 
+        MinterAddress
       );
       const response = await contract.methods
         .mint(metadataurl, tokenId, qty)
-        .send({ from: user?.get('ethAddress') });
+        .send({ from: MasterWalletAddress }); // user?.get('ethAddress')
 
         console.log('response', response);
 

@@ -1,8 +1,6 @@
-export const AdminContractAddress = "0xFd1f74D6Ca2dE8E74DA87Cc8fe9B360B8e5E80FA";
-export const MasterWalletAddress = "0xBbDF6BD03dc9d204efde0d596Aa7e53175CC945B";
-export const MinterAddress = "0xc3c51d4dD3621af8CB09BB0B3F48Abad8ED15CA8";
-
-export const contractAddress = "0x2402B33fa368d79b19E6A35F7e4A1e67FEB22E04";
+export const MasterWalletAddress = "0xe4674bB48331Ad42093123E0398e04485F5FCaa1";
+export const FactoryAddress = "0x7b20e904C7e83775f7945fA119a5EaAD152ec578"; // "0xc3c51d4dD3621af8CB09BB0B3F48Abad8ED15CA8";
+export const contractAddress = "0x8e1618Eae2e66a94FAC756e11e64c509cFB17241";
 export const contractABI = [
 	{
 		"inputs": [],
