@@ -1,4 +1,6 @@
 const assert = require("chai").assert;
+
+// @See: https://kalis.me/check-events-solidity-smart-contract-test-truffle/
 const truffleAssert = require('truffle-assertions');
 
 /** @type {ContractInstance} */
