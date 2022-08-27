@@ -47,8 +47,8 @@ OwnableUpgradeable, CloneFactory {
 
     address private FactoryContract;
 
-    event InstanceCreated(address, string, string);
-    event FactoryContractUpdated(address);
+    event InstanceCreated(address indexed address_, string name_, string symbol_);
+    event FactoryContractUpdated(address indexed address_);
 
     modifier isContract(address _addr) {
         require(FactoryContract != address(0));
