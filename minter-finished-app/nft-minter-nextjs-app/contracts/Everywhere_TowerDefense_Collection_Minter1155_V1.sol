@@ -41,6 +41,8 @@ contract CloneFactory {
 contract _Everywhere_TowerDefense_Collection_Minter1155_V1 is Initializable, UUPSUpgradeable,
 OwnableUpgradeable, CloneFactory {
 
+    string private _name;
+
     mapping(string => address) private Collections;
 
     address private FactoryContract;
@@ -55,7 +57,7 @@ OwnableUpgradeable, CloneFactory {
         _;
     }
 
-    function initialize() public initializer {
+    function initialize() initializer public {
         __Ownable_init();
         __UUPSUpgradeable_init();
     }
@@ -81,16 +83,24 @@ OwnableUpgradeable, CloneFactory {
         return Collections[name_];
     }
 
-    function setFactory(address FactoryContract_) public onlyOwner  returns(address) {
-        FactoryContract = FactoryContract_;
+    function setFactory(address FactoryContractAddress) public onlyOwner returns(address) {
+        FactoryContract = FactoryContractAddress;
 
         emit FactoryContractUpdated(FactoryContract);
 
         return FactoryContract;
     }
 
+    function getFactoryAddress() public view onlyOwner returns(address) {
+      return FactoryContract;
+    }
+
     function name() public view virtual returns (string memory) {
-        return "_Everywhere_TowerDefense_Collection_Minter1155_V1";
+        return _name;
+    }
+
+    function setName(string memory name_) public onlyOwner {
+      _name = name_;
     }
 
     function checkCollection(string memory CollectionName) public view virtual returns (address) {

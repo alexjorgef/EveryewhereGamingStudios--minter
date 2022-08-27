@@ -81,8 +81,7 @@ const Minter: React.FC = (): JSX.Element => {
       // save image to IPFS
       const fileToIpfs = new Moralis.File(
         file.name,
-        file)
-        ;
+        file);
       await fileToIpfs.saveIPFS();
       const fileToIpfsurl = fileToIpfs.ipfs();
 
