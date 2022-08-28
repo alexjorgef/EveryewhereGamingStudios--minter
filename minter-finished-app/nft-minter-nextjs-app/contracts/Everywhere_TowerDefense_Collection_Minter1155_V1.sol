@@ -38,8 +38,8 @@ contract CloneFactory {
   }
 }
 
-contract _Everywhere_TowerDefense_Collection_Minter1155_V1 is Initializable, UUPSUpgradeable,
-OwnableUpgradeable, CloneFactory {
+contract _Everywhere_TowerDefense_Collection_Minter1155_V1 is Initializable, OwnableUpgradeable, UUPSUpgradeable,
+CloneFactory {
 
     string private _name;
 

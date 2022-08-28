@@ -35,10 +35,11 @@ ERC1155Upgradeable, ERC1155SupplyUpgradeable, ERC1155URIStorageUpgradeable {
     }
 
     function initialize() initializer public {
-         __Ownable_init();
+        __Ownable_init();
         __ERC1155_init("");
         __ERC1155Supply_init();
         __UUPSUpgradeable_init();
+        __ERC1155URIStorage_init();
     }
 
     function setData(string memory name_, string memory symbol_) public onlyOwner payable {
