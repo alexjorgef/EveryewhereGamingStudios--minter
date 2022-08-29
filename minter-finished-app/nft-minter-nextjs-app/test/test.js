@@ -1,4 +1,7 @@
 require('dotenv').config();
+
+console.log('ENV:', process.env);
+
 const assert = require("chai").assert;
 const fs = require('fs');
 
@@ -92,7 +95,7 @@ contract('_Everywhere_TowerDefense_Collection_Minter1155_V1', (accounts) => {
         const setFactoryTx = await cm.setFactory(m.address, { from: cmOwner });
         console.log('setFactoryTx: ', setFactoryTx);
 
-        truffleAssert.eventEmitted(cm, 'FactoryContractUpdated', (ev) => {
+        truffleAssert.eventEmitted(setFactoryTx, 'FactoryContractUpdated', (ev) => {
             return parseInt(ev.address, 16) !== 0;
         });
 
@@ -110,13 +113,15 @@ contract('_Everywhere_TowerDefense_Collection_Minter1155_V1', (accounts) => {
         const createTx = await cm.create('Test Collection', 'eTDtV1', { from: cmOwner });
         console.log('createTx', createTx);
         
-        truffleAssert.eventEmitted(cm, 'InstanceCreated', (ev) => {
+        truffleAssert.eventEmitted(createTx, 'InstanceCreated', (ev) => {
             return parseInt(ev.address, 16) !== 0 && ev.name_ === 'Test Collection' && ev.symbol_ === 'eTDtV1';
         });
 
-        assert.notEqual(parseInt(createTx.address, 16), 0);
+        console.log('createTx.logs[0].args: ', createTx.logs[0].args);
 
-        testCollectionAddress = createTx.address;
+        assert.notEqual(parseInt(createTx.logs[0].args.value, 16), 0);
+
+        testCollectionAddress = createTx.logs[0].args.value;
     });
 
     it('should have 1 Minter contract: Address should not be zero', async () => {
