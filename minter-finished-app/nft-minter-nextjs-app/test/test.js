@@ -1,10 +1,15 @@
+require('dotenv').config();
 const assert = require("chai").assert;
+const fs = require('fs');
 
 // const ContractTracker = require('../utils/ContractTracker');
 // console.log('Contracts', ContractTracker.Contracts);
 
 // @See: https://kalis.me/check-events-solidity-smart-contract-test-truffle/
 const truffleAssert = require('truffle-assertions');
+
+/** @type {import('moralis').Moralis} */
+const Moralis = require('moralis/node');
 
 /** @type {import('@openzeppelin/truffle-upgrades/dist/utils').ContractClass} */
 const CM = artifacts.require('_Everywhere_TowerDefense_Collection_Minter1155_V1');
@@ -15,6 +20,14 @@ const Minter = artifacts.require('_Everywhere_TowerDefense_Minter1155_V1');
 contract('_Everywhere_TowerDefense_Collection_Minter1155_V1', (accounts) => {
 
     let cm, m, cmOwner, mOwner, testCollectionAddress, TestCollectionMinter;
+
+    before(async () => {
+        console.log('Starting Moralis');
+        await Moralis.start({
+            serverUrl: process.env.NEXT_PUBLIC_SERVER_URL,
+            appId: process.env.NEXT_PUBLIC_APP_ID
+        });
+    });
 
     it('should be same as cache', async () => {
         console.log('Collection Minter address: ', CM.address);
@@ -79,7 +92,7 @@ contract('_Everywhere_TowerDefense_Collection_Minter1155_V1', (accounts) => {
         const setFactoryTx = await cm.setFactory(m.address, { from: cmOwner });
         console.log('setFactoryTx: ', setFactoryTx);
 
-        truffleAssert.eventEmitted(setFactoryTx, 'FactoryContractUpdated', (ev) => {
+        truffleAssert.eventEmitted(cm, 'FactoryContractUpdated', (ev) => {
             return parseInt(ev.address, 16) !== 0;
         });
 
@@ -97,13 +110,13 @@ contract('_Everywhere_TowerDefense_Collection_Minter1155_V1', (accounts) => {
         const createTx = await cm.create('Test Collection', 'eTDtV1', { from: cmOwner });
         console.log('createTx', createTx);
         
-        truffleAssert.eventEmitted(createTx, 'InstanceCreated', (ev) => {
+        truffleAssert.eventEmitted(cm, 'InstanceCreated', (ev) => {
             return parseInt(ev.address, 16) !== 0 && ev.name_ === 'Test Collection' && ev.symbol_ === 'eTDtV1';
         });
 
-        assert.notEqual(parseInt(createTx, 16), 0);
+        assert.notEqual(parseInt(createTx.address, 16), 0);
 
-        testCollectionAddress = createTx;
+        testCollectionAddress = createTx.address;
     });
 
     it('should have 1 Minter contract: Address should not be zero', async () => {
@@ -146,7 +159,38 @@ contract('_Everywhere_TowerDefense_Collection_Minter1155_V1', (accounts) => {
         assert.equal(await TestCollectionMinter.symbol(), 'eTDtV1');
     });
 
-    // if('should mint first mintable in Test Collection', async() => {
-    //     TestCollectionMinter.mint()
-    // });
+    it('should mint first mintable in Test Collection', async() => {
+        const data = await fs.promises.readFile('./test/Frame9452.png');
+        const fileToIpfs = new Moralis.File('TestCollectionMintable1', data);
+        await fileToIpfs.saveIPFS();
+
+        const fileToIpfsurl = fileToIpfs.ipfs();
+
+        assert.notEqual(fileToIpfsurl, '');
+
+        const metadata = {
+            name: 'Pioneer Hero',
+            description: 'Tsting!',
+            properties: {
+              Collection: await TestCollectionMinter.name(),
+              TotalSupply: 1_000_000,
+              tokenId: 0,
+            },
+            image: fileToIpfsurl,
+        };
+
+        assert.notEqual(metadata.Collection, '');
+
+        const fileToUpload = new Moralis.File(`${collectionName}_Pioneer_Hero_Test_metadata.json`, {
+            base64: Buffer.from(JSON.stringify(metadata)).toString('base64'),
+        });
+
+        await fileToUpload.saveIPFS();
+        const metadataurl = fileToUpload.ipfs();
+
+        assert.notEqual(metadataurl, '');
+          
+        const mintTx = await TestCollectionMinter.mint(metadataurl, 0, 1_000_000);
+        console.log('mintTx', mintTx);
+    }).timeout(20000);
 });

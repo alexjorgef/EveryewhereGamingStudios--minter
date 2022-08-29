@@ -52,7 +52,6 @@ CloneFactory {
 
     modifier isContract(address _addr) {
         require(FactoryContract != address(0));
-        require(FactoryContract != address(0));
         require(AddressUpgradeable.isContract(_addr));
         _;
     }
