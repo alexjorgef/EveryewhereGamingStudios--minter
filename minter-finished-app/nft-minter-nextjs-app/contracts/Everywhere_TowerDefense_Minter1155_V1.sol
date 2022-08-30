@@ -13,7 +13,10 @@ ERC1155Upgradeable, ERC1155SupplyUpgradeable, ERC1155URIStorageUpgradeable {
     string private _name;
     string private _symbol;
 
-   function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
+    event InternalInitialized(address address_);
+    event DataSet(address address_, string name_, string symbol_);
+
+    function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 
     function _beforeTokenTransfer(
         address operator,
@@ -40,11 +43,15 @@ ERC1155Upgradeable, ERC1155SupplyUpgradeable, ERC1155URIStorageUpgradeable {
         __ERC1155Supply_init();
         __UUPSUpgradeable_init();
         __ERC1155URIStorage_init();
+
+        emit InternalInitialized(address(this));
     }
 
     function setData(string memory name_, string memory symbol_) public onlyOwner payable {
         _name = name_;
         _symbol = symbol_;
+
+        emit DataSet(address(this), _name, _symbol);
     }
 
     function mint(string memory _uri, uint256 tokenId, uint256 supply) public onlyOwner payable {

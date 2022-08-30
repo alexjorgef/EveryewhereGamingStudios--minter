@@ -22,7 +22,7 @@ const Minter = artifacts.require('_Everywhere_TowerDefense_Minter1155_V1');
 
 contract('_Everywhere_TowerDefense_Collection_Minter1155_V1', (accounts) => {
 
-    let cm, m, cmOwner, mOwner, testCollectionAddress, TestCollectionMinter;
+    let cm, m, cmOwner, mOwner, testNewMinterAddress, testNewMinter, testNewMinterDeployed;
 
     before(async () => {
         console.log('Starting Moralis');
@@ -119,9 +119,11 @@ contract('_Everywhere_TowerDefense_Collection_Minter1155_V1', (accounts) => {
 
         console.log('createTx.logs[0].args: ', createTx.logs[0].args);
 
-        assert.notEqual(parseInt(createTx.logs[0].args.value, 16), 0);
+        assert.notEqual(parseInt(createTx.logs[0].args.address_, 16), 0);
 
-        testCollectionAddress = createTx.logs[0].args.value;
+        testNewMinterAddress = createTx.logs[0].args.address_;
+
+        console.log('testNewMinterAddress: ', testNewMinterAddress);
     });
 
     it('should have 1 Minter contract: Address should not be zero', async () => {
@@ -131,37 +133,41 @@ contract('_Everywhere_TowerDefense_Collection_Minter1155_V1', (accounts) => {
         assert.notEqual(parseInt(checkCollection, 16), 0);
     });
 
-    it('should +1 tx count', async () => {
-        const checkCollection = await cm.checkCollection('Test Collection');
-        console.log('checkCollection2', checkCollection);
+    // it('should +1 tx count', async () => {
+    //     const checkCollection = await cm.checkCollection('Test Collection');
+    //     console.log('checkCollection2', checkCollection);
 
-        assert.notEqual(parseInt(checkCollection, 16), 0);
-    });
+    //     assert.notEqual(parseInt(checkCollection, 16), 0);
+    // });
 
-    it('should +1 tx count', async () => {
-        const checkCollection = await cm.checkCollection('Test Collection');
-        console.log('checkCollection3', checkCollection);
+    // it('should +1 tx count', async () => {
+    //     const checkCollection = await cm.checkCollection('Test Collection');
+    //     console.log('checkCollection3', checkCollection);
 
-        assert.notEqual(parseInt(checkCollection, 16), 0);
-    });
+    //     assert.notEqual(parseInt(checkCollection, 16), 0);
+    // });
 
-    it('should +1 tx count and be zero', async () => {
-        const checkCollection = await cm.checkCollection('Test Collection 1');
-        console.log('checkCollection4', checkCollection);
+    // it('should +1 tx count and be zero', async () => {
+    //     const checkCollection = await cm.checkCollection('Test Collection 1');
+    //     console.log('checkCollection4', checkCollection);
 
-        assert.equal(parseInt(checkCollection, 16), 0);
-    });
+    //     assert.equal(parseInt(checkCollection, 16), 0);
+    // });
 
     it('should find Test Collection Minter', async () => {
-        TestCollectionMinter = await Minter.at(testCollectionAddress);
-        console.log('TestCollectionMinter', TestCollectionMinter.address);
+        console.log('loading testNewMinterAddress at: ', testNewMinterAddress);
+        testNewMinter = await Minter.at(testNewMinterAddress);
+        console.table([{'testNewMinter': testNewMinter.address, 'm': m.address}]);
 
-        assert.equal(TestCollectionMinter.address, testCollectionAddress);
+        testNewMinterDeployed = await Minter.deployed();
+
+        assert.equal(testNewMinter.address, testNewMinterAddress);
+        assert.equal(testNewMinter.address, testNewMinterDeployed.address);
     });
 
     it('should have correct name and symbol', async () => {
-        assert.equal(await TestCollectionMinter.name(), 'Test Collection');
-        assert.equal(await TestCollectionMinter.symbol(), 'eTDtV1');
+        assert.equal(await testNewMinterDeployed.name(), 'Test Collection');
+        assert.equal(await testNewMinterDeployed.symbol(), 'eTDtV1');
     });
 
     it('should mint first mintable in Test Collection', async() => {
@@ -177,7 +183,7 @@ contract('_Everywhere_TowerDefense_Collection_Minter1155_V1', (accounts) => {
             name: 'Pioneer Hero',
             description: 'Tsting!',
             properties: {
-              Collection: await TestCollectionMinter.name(),
+              Collection: await testNewMinterDeployed.name(),
               TotalSupply: 1_000_000,
               tokenId: 0,
             },
@@ -195,7 +201,7 @@ contract('_Everywhere_TowerDefense_Collection_Minter1155_V1', (accounts) => {
 
         assert.notEqual(metadataurl, '');
           
-        const mintTx = await TestCollectionMinter.mint(metadataurl, 0, 1_000_000);
+        const mintTx = await testNewMinterDeployed.mint(metadataurl, 0, 1_000_000);
         console.log('mintTx', mintTx);
     }).timeout(20000);
 });
