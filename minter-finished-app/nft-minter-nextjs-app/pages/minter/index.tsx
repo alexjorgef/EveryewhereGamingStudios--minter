@@ -29,8 +29,8 @@ import {
 import { logo } from '../../utils/logos'
 import HooverSpringer from '../../components/HooverSpringer';
 
-import _Everywhere_TowerDefense_Collection_Minter1155_V1 from '../../build/contracts/_Everywhere_TowerDefense_Collection_Minter1155_V1.json';
-import _Everywhere_TowerDefense_Minter1155_V1 from '../../build/contracts/_Everywhere_TowerDefense_Minter1155_V1.json';
+import _Everywhere_TowerDefense_Collection_Minter1155_V1 from '../../build/contracts/Collection_Minter1155_V2.json';
+import _Everywhere_TowerDefense_Minter1155_V1 from '../../build/contracts/Minter1155_V2.json';
 
 // global variables
 const cx = classnames.bind(styles);
@@ -66,6 +66,8 @@ const Minter: React.FC = (): JSX.Element => {
   // on submit function
   const onSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
+    
+    console.log('file', file);
     try {
 
       const _Everywhere_TowerDefense_Collection_Minter1155_V1Contract = new web3.eth.Contract(_Everywhere_TowerDefense_Collection_Minter1155_V1.abi as any, FactoryAddress);

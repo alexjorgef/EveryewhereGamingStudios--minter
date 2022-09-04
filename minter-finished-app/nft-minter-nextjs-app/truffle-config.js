@@ -16,7 +16,7 @@ module.exports = {
         port: 7545,
         network_id: "*",
         skipDryRun: true,
-        gas: 6721975 //https://ethereum.stackexchange.com/questions/65929/truffle-and-ganache-do-i-need-to-set-the-same-gas-price-and-gas-limit-in-both
+        // gas: 15000000 //https://ethereum.stackexchange.com/questions/65929/truffle-and-ganache-do-i-need-to-set-the-same-gas-price-and-gas-limit-in-both
       }
   },
 
