@@ -32,11 +32,9 @@ contract Collection_Minter1155_V2 is Ownable {
 
         emit InstanceCreatedStart(_msgSender(), owner(), name_, symbol_);
 
-        Minter1155_V2 minter = new Minter1155_V2();//Minter1155_V1(createClone(FactoryContract));
-        
-        minter.setData(name_, symbol_);
-
+        Minter1155_V2 minter = new Minter1155_V2(); //Minter1155_V1(createClone(FactoryContract));
         minter.init(_msgSender());
+        minter.setData(name_, symbol_);
         
         Collections.push(minter);
         CollectionsByName[name_] = address(minter);

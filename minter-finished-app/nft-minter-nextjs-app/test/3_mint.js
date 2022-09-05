@@ -18,6 +18,10 @@ const Minter = artifacts.require('Minter1155_V2');
 const testNewMinterAddress = '0x8ef9537581c70878f3e1946fAB3aFAc0DCf3f51e';
 
 contract('Minter1155_V2', (accounts) => {
+    
+    const ContractName = 'Test Collection 2';
+    const ContractSymbol = 'eTDtV2';
+
     let _accounts;
 
 	before(async () => {
@@ -73,8 +77,8 @@ contract('Minter1155_V2', (accounts) => {
         const symbol = await testNewMinter.methods.symbol().call({from: accounts[0]});
         console.log('symbol', symbol);
 
-        assert.equal(name, 'Test Collection 2');
-        assert.equal(symbol, 'eTDtV2');
+        assert.equal(name, ContractName);
+        assert.equal(symbol, ContractSymbol);
     });
 
     it('should mint first mintable in Test Collection', async() => {
@@ -115,5 +119,18 @@ contract('Minter1155_V2', (accounts) => {
         
         const mintTx = await testNewMinter.methods.mint(metadataurl, 0, 1_000_000).send({from: accounts[0], gas: 500000});
         console.log('mintTx', mintTx);
+
+        console.log('mintTx Minted Ev', mintTx.events.find( ev => ev.event === 'Minted'));
     }).timeout(20000);
+
+    it('should list 1 mintable', async() => {
+        const totalSupplyTx = testNewMinter.methods.totalSupply().send();
+        console.log('totalSupplyTx', totalSupplyTx);
+
+        const totalSupply = testNewMinter.methods.totalSupply().call();
+        console.log('totalSupply', totalSupply);
+
+        assert.notEqual(totalSupply.length, 0);
+
+    });
 });
