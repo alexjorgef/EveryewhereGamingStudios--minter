@@ -4,20 +4,20 @@ const HDWalletProvider = require('@truffle/hdwallet-provider');
 
 module.exports = {
   networks: {
-    // cronos_testnet: {
-    //     provider: () => new HDWalletProvider(
-    //         process.env.PRIVATE_KEY, `https://evm-t3.cronos.org`
-    //     ),
-    //     network_id: "*",
-    //     skipDryRun: true
-    //   },
-      development: {
-        host: '127.0.0.1',
-        port: 7545,
+      cronos_testnet: {
+        provider: () => new HDWalletProvider(
+            process.env.PRIVATE_KEY, `https://evm-t3.cronos.org`
+        ),
         network_id: "*",
-        skipDryRun: true,
-        // gas: 15000000 //https://ethereum.stackexchange.com/questions/65929/truffle-and-ganache-do-i-need-to-set-the-same-gas-price-and-gas-limit-in-both
-      }
+        skipDryRun: true
+      },
+      // development: {
+      //   host: '127.0.0.1',
+      //   port: 7545,
+      //   network_id: "*",
+      //   skipDryRun: true,
+      //   // gas: 15000000 //https://ethereum.stackexchange.com/questions/65929/truffle-and-ganache-do-i-need-to-set-the-same-gas-price-and-gas-limit-in-both
+      // }
   },
 
   // Set default mocha options here, use special reporters etc.

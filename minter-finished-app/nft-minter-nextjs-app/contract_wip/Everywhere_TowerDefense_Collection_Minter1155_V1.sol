@@ -38,7 +38,7 @@ contract CloneFactory {
   }
 }
 
-contract _Everywhere_TowerDefense_Collection_Minter1155_V1 is Initializable, OwnableUpgradeable, UUPSUpgradeable,
+contract Everywhere_TowerDefense_Collection_Minter1155_V1 is Initializable, OwnableUpgradeable, UUPSUpgradeable,
 CloneFactory {
 
     string private _name;
@@ -69,8 +69,8 @@ CloneFactory {
 
             address clone = createClone(FactoryContract);
             
-            _Everywhere_TowerDefense_Minter1155_V1(clone).initialize();
-            _Everywhere_TowerDefense_Minter1155_V1(clone).setData(name_, symbol_);
+            Everywhere_TowerDefense_Minter1155_V1(clone).initialize();
+            Everywhere_TowerDefense_Minter1155_V1(clone).setData(name_, symbol_);
             
             Collections[name_] = clone;
 

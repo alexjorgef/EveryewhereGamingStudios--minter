@@ -3,7 +3,6 @@ pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
-import "./CloneFactory.sol";
 import "./Minter1155_V2.sol";
 
 contract Collection_Minter1155_V2 is Ownable {
@@ -53,7 +52,7 @@ contract Collection_Minter1155_V2 is Ownable {
         return FactoryContract;
     }
 
-    function getFactoryAddress() external view onlyOwner returns(address) {
+    function getFactoryAddress() external view virtual onlyOwner returns(address) {
         return FactoryContract;
     }
 

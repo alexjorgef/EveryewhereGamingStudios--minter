@@ -8,7 +8,7 @@ import "@openzeppelin/contracts-upgradeable/token/ERC1155/extensions/ERC1155URIS
 import "@openzeppelin/contracts-upgradeable/token/ERC1155/ERC1155Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
-contract _Everywhere_TowerDefense_Minter1155_V1 is Initializable, OwnableUpgradeable, UUPSUpgradeable,
+contract Everywhere_TowerDefense_Minter1155_V1 is Initializable, OwnableUpgradeable, UUPSUpgradeable,
 ERC1155Upgradeable, ERC1155SupplyUpgradeable, ERC1155URIStorageUpgradeable {
     string private _name;
     string private _symbol;
