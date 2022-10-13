@@ -1,3 +1,5 @@
+return;
+
 const hardhat = require('hardhat');
 const assert = require('assert');
 

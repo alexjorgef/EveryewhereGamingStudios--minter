@@ -1,3 +1,5 @@
+return;
+
 require('dotenv').config();
 const assert = require("chai").assert;
 

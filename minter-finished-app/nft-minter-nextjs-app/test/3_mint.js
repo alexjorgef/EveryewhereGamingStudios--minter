@@ -1,8 +1,8 @@
 require('dotenv').config();
 
 const assert = require("chai").assert;
-const Web3 = require('web3');
-const web3 = new Web3('ws://localhost:7545');
+// const Web3 = require('web3');
+// const web3 = new Web3('ws://127.0.0.1:7545');
 const fs = require('fs');
 const { Blob, Buffer } = require('node:buffer');
 
@@ -10,19 +10,16 @@ const { Blob, Buffer } = require('node:buffer');
 const MoralisCall = require('moralis/node');
 
 /** @type {import('@openzeppelin/truffle-upgrades/dist/utils').ContractClass} */
-const CM = artifacts.require('Collection_Minter1155_V2');
+const CollectionMinterArtifact = artifacts.require('Collection_Minter1155_V3');
 
 /** @type {import('@openzeppelin/truffle-upgrades/dist/utils').ContractClass} */
-const Minter = artifacts.require('Minter1155_V2');
+const Minter = artifacts.require('Minter1155_V3');
 
-const testNewMinterAddress = '0x8ef9537581c70878f3e1946fAB3aFAc0DCf3f51e';
-
-contract('Minter1155_V2', (accounts) => {
+contract('Minter1155_V3', (accounts) => {
     
-    const ContractName = 'Test Collection 2';
-    const ContractSymbol = 'eTDtV2';
+    const NewMinterConfigs = require('./MinterAddress.json');
 
-    let _accounts;
+    let NewMinter;
 
 	before(async () => {
         console.log('Starting Moralis');
@@ -30,64 +27,48 @@ contract('Minter1155_V2', (accounts) => {
             serverUrl: process.env.NEXT_PUBLIC_SERVER_URL,
             appId: process.env.NEXT_PUBLIC_APP_ID,
             masterKey: process.env.NEXT_MASTER_KEY,
-            moralisSecret: process.env.NEXT_SECRET_KEY
+            //moralisSecret: process.env.NEXT_SECRET_KEY
         });
 
-        const network = await web3.eth.net.getNetworkType();
-        console.log('network', network);
+        // const network = await web3.eth.net.getNetworkType();
+        // console.log('network', network);
 
-        _accounts = await web3.eth.getAccounts();
-        console.table([{'_accounts': _accounts[0], 'accounts': accounts[0]}]);
+        // _accounts = await web3.eth.getAccounts();
+        // console.table([{'_accounts': _accounts[0], 'accounts': accounts[0]}]);
+
+        console.log('NewMinterConfigs: ', NewMinterConfigs);
+        assert(NewMinterConfigs && NewMinterConfigs.address && NewMinterConfigs.address.length);
+        assert(parseInt(NewMinterConfigs.address, 16) !== 0);
+
+        assert(NewMinterConfigs && NewMinterConfigs.name && NewMinterConfigs.name.length);
+        assert(NewMinterConfigs && NewMinterConfigs.symbol && NewMinterConfigs.symbol.length);
     });
 
-    it('should find Test Collection Minter', async () => {
-        console.log('loading testNewMinterAddress at: ', testNewMinterAddress);
+    it('should find Minter', async () => {
+        console.log('loading NewMinterConfigs.address at: ', NewMinterConfigs.address);
 
-        testNewMinter = await Minter.at(testNewMinterAddress)
-        // console.log( testNewMinter.abi);
-        testNewMinter = new web3.eth.Contract(
-            testNewMinter.abi,
-            testNewMinterAddress
-        );
-
-        const owner = await testNewMinter.methods.owner().call();
-        console.log('Owner', owner);
-
-        console.log('testNewMinter.address', testNewMinter._address);
-
-        assert.equal(testNewMinter._address, testNewMinterAddress);
+        NewMinter = await Minter.at(NewMinterConfigs.address);
+        console.log('NewMinter.address', NewMinter.address);
+        assert.equal(NewMinter.address, NewMinterConfigs.address);
     });
-
-    // it('should setData', async() => {
-    //     const setDataP = testNewMinter.methods.setData('Test Collection 2', 'eTDtV2');
-    //     // console.log('setDataP', setDataP);
-
-    //     // const gas = await setDataP.estimateGas();
-    //     // console.log('gas', gas);
-
-    //     const setDataTx = await setDataP.send({from: accounts[0], gas: 5000000});
-    //     console.log('setDataTx', setDataTx);
-
-    //     // assert.exists(setDataTx);
-    // });
 
     it('should have correct name and symbol', async () => {
-        const name = await testNewMinter.methods.name().call({from: accounts[0]});
+        const name = await NewMinter.name({from: accounts[0]});
         console.log('name', name);
-        const symbol = await testNewMinter.methods.symbol().call({from: accounts[0]});
+        const symbol = await NewMinter.symbol({from: accounts[0]});
         console.log('symbol', symbol);
 
-        assert.equal(name, ContractName);
-        assert.equal(symbol, ContractSymbol);
+        assert.equal(name, NewMinterConfigs.name);
+        assert.equal(symbol, NewMinterConfigs.symbol);
     });
 
     it('should mint first mintable in Test Collection', async() => {
-        const data = await fs.promises.readFile('test/Frame9452.png');
+        const data = await fs.promises.readFile('./test/Frame9452.png');
         console.log(data);
         const blob = new Blob([data], { type: 'image/png' });
         console.log(blob);
 
-        const fileToIpfs = new MoralisCall.File('TestCollectionMintable1Image.png', blob);
+        const fileToIpfs = new MoralisCall.File('TestCollectionMintable7Image.png', blob);
         await fileToIpfs.saveIPFS({useMasterKey: true});
 
         const fileToIpfsurl = fileToIpfs.ipfs();
@@ -96,9 +77,9 @@ contract('Minter1155_V2', (accounts) => {
 
         const metadata = {
             name: 'Pioneer Hero',
-            description: 'Tsting!',
+            description: 'Testing!',
             properties: {
-              Collection: await testNewMinter.methods.name().call({from: accounts[0]}),
+              Collection: await NewMinter.name({from: accounts[0]}),
               tokenId: 0,
             },
             image: fileToIpfsurl,
@@ -117,20 +98,16 @@ contract('Minter1155_V2', (accounts) => {
 
         console.log('metadataurl', metadataurl);
         
-        const mintTx = await testNewMinter.methods.mint(metadataurl, 0, 1_000_000).send({from: accounts[0], gas: 500000});
+        const mintTx = await NewMinter.mint(metadataurl, 0, 1_000_000, {from: accounts[0]});
         console.log('mintTx', mintTx);
 
         console.log('mintTx Minted Ev', mintTx.events.find( ev => ev.event === 'Minted'));
     }).timeout(20000);
 
     it('should list 1 mintable', async() => {
-        const totalSupplyTx = testNewMinter.methods.totalSupply().send();
-        console.log('totalSupplyTx', totalSupplyTx);
-
-        const totalSupply = testNewMinter.methods.totalSupply().call();
+        const totalSupply = NewMinter.totalSupply(0);
         console.log('totalSupply', totalSupply);
 
-        assert.notEqual(totalSupply.length, 0);
-
+        assert.notEqual(totalSupply, 0);
     });
 });

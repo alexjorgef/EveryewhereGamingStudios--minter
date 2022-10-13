@@ -7,94 +7,93 @@ const sleep = (time) => new Promise(resolve => setTimeout(resolve, time));
 const truffleAssert = require('truffle-assertions');
 
 /** @type {import('@openzeppelin/truffle-upgrades/dist/utils').ContractClass} */
-const CM = artifacts.require('Collection_Minter1155_V2');
+const CollectionMinterArtifact = artifacts.require('Collection_Minter1155_V3');
 
 /** @type {import('@openzeppelin/truffle-upgrades/dist/utils').ContractClass} */
-const Minter = artifacts.require('Minter1155_V2');
+const MinterArtifcat = artifacts.require('Minter1155_V3');
 
-contract('Collection_Minter1155_V2', (accounts) => {
+contract('Collection_Minter1155_V3', (accounts) => {
 
-    /** @type {import('@openzeppelin/truffle-upgrades/dist/utils/truffle').TruffleContract} */
-    
-    let cm, m, cmOwner, mOwner;
+    let CollectionMinter, Minter, CollectionMinterOwner, MinterOwner;
 
     it('should be same as Collection Minter deployed address: not zero', async () => {
-        console.log('Collection Minter address: ', CM.address);
-        assert.notEqual(parseInt(CM.address, 16), 0);
+        console.log('Collection Minter address: ', CollectionMinterArtifact.address);
+        assert.notEqual(parseInt(CollectionMinterArtifact.address, 16), 0);
     });
 
     it('should get deployed Collection Minter contract', async() => {
-        cm = await CM.deployed();
+        CollectionMinter = await CollectionMinterArtifact.deployed();
 
-        console.log('Collection Minter deployed address: ', cm.address);
-        assert.notEqual(parseInt(cm.address, 16), 0);
-        assert.equal(cm.address, CM.address);
+        console.log('Collection Minter deployed address: ', CollectionMinter.address);
+        assert.notEqual(parseInt(CollectionMinter.address, 16), 0);
+        assert.equal(CollectionMinter.address, CollectionMinterArtifact.address);
     });
 
     it('should be same as Minter deployed address: not zero', async () => {
-        console.log('Minter address: ', Minter.address);
-        assert.notEqual(parseInt(Minter.address, 16), 0);
+        await sleep(100);
+        console.log('Minter address: ', MinterArtifcat.address);
+        assert.notEqual(parseInt(MinterArtifcat.address, 16), 0);
     });
 
     it('should get deployed Minter contract', async() => {
-        m = await Minter.deployed();
+        Minter = await MinterArtifcat.deployed();
 
-        console.log('Minter deployed address: ', m.address);
-        assert.notEqual(parseInt(m.address, 16), 0);
-        assert.equal(m.address, Minter.address);
+        console.log('Minter deployed address: ', Minter.address);
+        assert.notEqual(parseInt(Minter.address, 16), 0);
+        assert.equal(Minter.address, Minter.address);
     });
     
     it('should not be zero Collection Minter owner', async () => {
-        cmOwner = await cm.owner();
-        console.log('Collection Minter Owner: ', cmOwner);
-        assert.notEqual(parseInt(cmOwner, 16), 0);
+        CollectionMinterOwner = await CollectionMinter.owner();
+        console.log('Collection Minter Owner: ', CollectionMinterOwner);
+        assert.notEqual(parseInt(CollectionMinterOwner, 16), 0);
     });
 
     it('should be the same as Collection Minter Owner', async () => {
-        mOwner = await m.owner()
-        console.log('Minter Owner: ', mOwner);
+        MinterOwner = await Minter.owner()
+        console.log('Minter Owner: ', MinterOwner);
 
-        assert.notEqual(parseInt(mOwner, 16), 0);
-        assert.equal(mOwner, cmOwner);
+        assert.notEqual(parseInt(MinterOwner, 16), 0);
+        assert.equal(MinterOwner, CollectionMinterOwner);
     });
 
     it('should set the name of the Collection Minter Contract', async () => {
-        const cSetName = await cm.setName('Collection_Minter1155_V2', { from: cmOwner });
+        const cSetName = await CollectionMinter.setName('Cosmic Exodus Collection Factory', { from: CollectionMinterOwner });
         console.log('cSetName: ', cSetName);
 
-        assert.equal(await cm.name(), 'Collection_Minter1155_V2');
+        assert.equal(await CollectionMinter.name(), 'Cosmic Exodus Collection Factory');
     });
 
     it('should not have a default Minter name of ""', async () => {
-        assert.equal(await m.name(), '');
+        assert.equal(await Minter.name(), '');
     });
 
     it('should set name and symbol set', async () => {
-        const mSetData = await m.setData('_Everywhere__Test_Collection__', 'eTDtV1xxxx', { from: cmOwner });
+        const mSetData = await Minter.setData('Cosmic Exodus Collection Minter', 'CECM', { from: CollectionMinterOwner });
         console.log('mSetData" ', mSetData);
 
-        assert.equal(await m.name(), '_Everywhere__Test_Collection__');
-        assert.equal(await m.symbol(),'eTDtV1xxxx');
+        assert.equal(await Minter.name(), 'Cosmic Exodus Collection Minter');
+        assert.equal(await Minter.symbol(), 'CECM');
     });
 
     it('Minter should set factory: Address should be Minter address', async () => {
-        const setFactoryTx = await cm.setFactory(m.address, { from: cmOwner });
+        const setFactoryTx = await CollectionMinter.setFactory(Minter.address, { from: CollectionMinterOwner });
         console.log('setFactoryTx: ', setFactoryTx);
 
         truffleAssert.eventEmitted(setFactoryTx, 'FactoryContractUpdated', (ev) => {
             return parseInt(ev.address_, 16) !== 0;
         });
 
-        const factoryAddress = await cm.getFactoryAddress({ from: cmOwner });
-        console.log('factoryAddress', factoryAddress, m.address);
+        const factoryAddress = await CollectionMinter.getFactoryAddress({ from: CollectionMinterOwner });
+        console.log('factoryAddress', factoryAddress, Minter.address);
 
-        assert.equal(factoryAddress, m.address);
+        assert.equal(factoryAddress, Minter.address);
     });
 
     it('should not exist', async () => {
-        const checkCollection = await cm.checkCollection('Test Collection');
+        const checkCollection = await CollectionMinter.checkCollectionByName('Test Collection');
         console.log('checkCollection: Test Collection ', checkCollection);
 
-        assert.equal(parseInt(checkCollection, 16), 0);
+        assert.equal(checkCollection, false);
     });
 });

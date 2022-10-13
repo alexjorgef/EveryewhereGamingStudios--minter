@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 
-contract Minter1155_V31 is Ownable, Initializable, ERC1155Supply, ERC1155URIStorage, ERC1155Holder {
+contract Minter1155_V2 is Ownable, Initializable, ERC1155Supply, ERC1155URIStorage, ERC1155Holder {
     string private _name;
     string private _symbol;
 

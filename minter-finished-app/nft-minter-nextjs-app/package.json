@@ -28,6 +28,7 @@
     "@openzeppelin/truffle-upgrades": "^1.16.0",
     "@optionality.io/clone-factory": "^0.2.1",
     "@truffle/artifactor": "^4.0.167",
+    "@truffle/deployer": "^3.2.97",
     "@types/node": "17.0.4",
     "@types/react": "17.0.38",
     "autoprefixer": "^10.4.0",
