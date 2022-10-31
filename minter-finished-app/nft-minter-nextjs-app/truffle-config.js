@@ -2,7 +2,8 @@
 // const { etherscanApiKey } = require('./secrets.json');
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 
-//const fs = require('fs');
+// @See: https://wiki.polygon.technology/docs/develop/truffle/
+// const fs = require('fs');
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
 
 module.exports = {
@@ -19,6 +20,7 @@ module.exports = {
         network_id: "80001",
         skipDryRun: true
       },
+      // @See: https://wiki.polygon.technology/docs/develop/truffle/
       // matic: {
       //   provider: () => new HDWalletProvider(mnemonic, `https://rpc-mumbai.maticvigil.com`),
       //   network_id: 80001,
