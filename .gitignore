@@ -1,2 +1,24 @@
+# JS
+node_modules
+yarn-error.log
+typechain
+
+# Test
+coverage/
+coverage.json
+
+# Hardhat files
+cache
+artifacts
+src/types/
+build
+.openzeppelin
+
+# Other files
+.env
+.env.*
+!.env.example
 .DS_Store
-*node_modules/
+.idea
+.vscode
+.vscode/launch.json
