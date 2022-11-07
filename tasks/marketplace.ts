@@ -3,24 +3,25 @@ import { task } from 'hardhat/config'
 
 import dataCollections from '../data/CosmicNFTsMetadata.json'
 
-interface INetwork {
-    testA: string
-    testB: number
-}
+// interface INetwork {
+//     testA: string
+//     testB: number
+// }
 
-const networks: { [id: string]: INetwork } = {
-    polygon: {
-        testA: '0x000000000000000000000000000000x',
-        testB: 50,
-    },
-    mumbai: {
-        testA: '0x000000000000000000000000000000x',
-        testB: 13,
-    },
-}
+// const networks: { [id: string]: INetwork } = {
+//     polygon: {
+//         testA: '0x000000000000000000000000000000x',
+//         testB: 50,
+//     },
+//     mumbai: {
+//         testA: '0x000000000000000000000000000000x',
+//         testB: 13,
+//     },
+// }
 
 task('marketplace:deploy', 'Deploy Marketplace contract').setAction(async (taskArgs, hre) => {
-    const [owner, addr1, addr2, ...addrs] = await hre.ethers.getSigners()
+    // const [owner, addr1, addr2, ...addrs] = await hre.ethers.getSigners()
+    const [owner] = await hre.ethers.getSigners()
     const Contract = await hre.ethers.getContractFactory('Marketplace')
     const contract = await Contract.deploy(1, owner.address)
     await contract.deployed()
