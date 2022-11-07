@@ -3,7 +3,7 @@ import { Contract } from 'ethers'
 import { assert, expect } from 'chai'
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
 
-describe('Collections contracts', function () {
+describe('NFT Collection contract', function () {
     let contractCollection: Contract
     let owner: SignerWithAddress
     let addr1: SignerWithAddress
