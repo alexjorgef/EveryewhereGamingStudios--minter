@@ -13,7 +13,8 @@ import 'hardhat-contract-sizer'
 import { HardhatUserConfig, task } from 'hardhat/config'
 import dotenv from 'dotenv'
 
-import './tasks/collections'
+import './tasks/collection'
+import './tasks/marketplace'
 
 dotenv.config()
 
@@ -47,13 +48,15 @@ const config: HardhatUserConfig = {
             chainId: 80001,
             url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.MUMBAI_ALCHEMY_API_KEY}`,
             accounts: process.env.WALLET_PRIVATE_KEY ? [`${process.env.WALLET_PRIVATE_KEY}`] : [],
+            gas: 'auto',
+            gasPrice: 8000000000,
         },
     },
     etherscan: {
         apiKey: {
-            ropsten: process.env.ETHERSCAN_API_KEY,
-            polygon: process.env.POLYGONSCAN_API_KEY,
-            polygonMumbai: process.env.POLYGONSCAN_API_KEY,
+            ropsten: process.env.ETHERSCAN_API_KEY ? process.env.ETHERSCAN_API_KEY : '',
+            polygon: process.env.POLYGONSCAN_API_KEY ? process.env.POLYGONSCAN_API_KEY : '',
+            polygonMumbai: process.env.POLYGONSCAN_API_KEY ? process.env.POLYGONSCAN_API_KEY : '',
         },
     },
     solidity: {
